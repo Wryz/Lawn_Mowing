@@ -1,5 +1,5 @@
-# Lawn-Mowing-Optimization
-The Lawn Mowing Optimization determines an optimal route to mow a lawn.
+# Lawn-Mowing
+The Lawn Mowing application determines an optimal route to mow a lawn.
 
 
 **PROBLEM STATEMENT**
