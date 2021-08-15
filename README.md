@@ -10,3 +10,5 @@ The lawn is made of many verticies which *optimally* should only be visted once.
 1's will be represented as a patch of grass and 0's will be represented as obstacles. Once a patch of grass has been visited it will turn into a 0, and it may be stored elsewhere to be called upon in the event that the algorithm is required to go over already-cut-grass to get to a patch of uncut grass, or the end point.
 
 Efficiency of a path is determined by the total number of 1's in the 2D array, over the patches of grass that the algorithm has to run over.
+
+More info can be read from this wiki of the TSP: https://en.wikipedia.org/wiki/Travelling_salesman_problem
