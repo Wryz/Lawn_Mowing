@@ -3,7 +3,7 @@ The Lawn Mowing application determines an optimal route to mow a lawn.
 
 
 **PROBLEM STATEMENT**
-The algorithm closely follows the Traveling Salesman problem: https://www.geeksforgeeks.org/travelling-salesman-problem-implementation-using-backtracking/
+The algorithm closely follows the Traveling Salesman problem: https://www.geeksforgeeks.org/travelling-salesman-problem-greedy-approach/
 It will help to determine the shortest path to visit all verticies at least once. It is computed given a 2D array of *weights* or the cost of travel, and *n* the amount of nodes to visit, where it seeks to find lowest cost of a path of n verticies.
 
 The lawn is made of many verticies which *optimally* should only be visted once. The task is to create an algorithm that (given a 2D array of 1's and 0's, and a starting position within that array) can find the shortest route to visitng each element in the array and back to it's starting position.
