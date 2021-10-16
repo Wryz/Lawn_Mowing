@@ -1,85 +1,137 @@
-import java.util.*;
+class Core {
+    final int V = 5;
+    int path[];
 
-public class Core {
-    public static void main(String[] args) {
-        System.out.println("Application Enabled");
+    /* A utility function to check if the vertex v can be
+       added at index 'pos'in the Hamiltonian Cycle
+       constructed so far (stored in 'path[]') */
+    boolean isSafe(int v, int graph[][], int path[], int pos) {
+        /* Check if this vertex is an adjacent vertex of
+           the previously added vertex. */
+        if (graph[path[pos - 1]][v] == 0)
+            return false;
+ 
+        /* Check if the vertex has already been included.
+           This step can be optimized by creating an array
+           of size V */
+        for (int i = 0; i < pos; i++)
+            if (path[i] == v)
+                return false;
 
-        // Input Matrix
-        int[][] tsp = {
-                { -1, 10, 15, 20 },
-                { 10, -1, 35, 25 },
-                { 15, 35, -1, 30 },
-                { 20, 25, 30, -1 }
+        return true;
+    }
+
+    /* A recursive utility function to solve hamiltonian
+       cycle problem */
+    boolean hamCycleUtil(int graph[][], int path[], int pos) {
+        /* base case: If all vertices are included in
+           Hamiltonian Cycle */
+        if (pos == V) {
+            // And if there is an edge from the last included
+            // vertex to the first vertex
+            if (graph[path[pos - 1]][path[0]] == 1)
+                return true;
+            else
+                return false;
+        }
+
+        // Try different vertices as a next candidate in
+        // Hamiltonian Cycle. We don't try for 0 as we
+        // included 0 as starting point in hamCycle()
+        for (int v = 1; v < V; v++) {
+            /* Check if this vertex can be added to Hamiltonian
+               Cycle */
+            if (isSafe(v, graph, path, pos)) {
+                path[pos] = v;
+
+                /* recur to construct rest of the path */
+                if (hamCycleUtil(graph, path, pos + 1) == true)
+                    return true;
+ 
+                /* If adding vertex v doesn't lead to a solution,
+                   then remove it */
+                path[pos] = -1;
+            }
+        }
+ 
+        /* If no vertex can be added to Hamiltonian Cycle
+           constructed so far, then return false */
+        return false;
+    }
+
+    /* This function solves the Hamiltonian Cycle problem using
+       Backtracking. It mainly uses hamCycleUtil() to solve the
+       problem. It returns false if there is no Hamiltonian Cycle
+       possible, otherwise return true and prints the path.
+       Please note that there may be more than one solutions,
+       this function prints one of the feasible solutions. */
+    int hamCycle(int graph[][]) {
+        path = new int[V];
+        for (int i = 0; i < V; i++)
+            path[i] = -1;
+ 
+        /* Let us put vertex 0 as the first vertex in the path.
+           If there is a Hamiltonian Cycle, then the path can be
+           started from any point of the cycle as the graph is
+           undirected */
+        path[0] = 0;
+        if (hamCycleUtil(graph, path, 1) == false) {
+            System.out.println("\nSolution does not exist");
+            return 0;
+        }
+
+        printSolution(path);
+        return 1;
+    }
+
+    /* A utility function to print solution */
+    void printSolution(int path[]) {
+        System.out.println("Solution Exists: Following" +
+                " is one Hamiltonian Cycle");
+        for (int i = 0; i < V; i++)
+            System.out.print(" " + path[i] + " ");
+
+        // Let us print the first vertex again to show the
+        // complete cycle
+        System.out.println(" " + path[0] + " ");
+    }
+
+    // driver program to test above function
+    public static void main(String args[]) {
+        Core hamiltonian =
+                new Core();
+        /* Let us create the following graph
+           (0)--(1)--(2)
+            |   / \   |
+            |  /   \  |
+            | /     \ |
+           (3)-------(4)    */
+        int graph1[][] = {
+                {0, 1, 0, 1, 0},
+                {1, 0, 1, 1, 1},
+                {0, 1, 0, 0, 1},
+                {1, 1, 0, 0, 1},
+                {0, 1, 1, 1, 0},
         };
 
-        // Function Call
-        findMinRoute(tsp);
-    }
-    // Function to find the minimum
-    // cost path for all the paths
-    static void findMinRoute(int[][] tsp) {
-        int sum = 0;
-        int counter = 0;
-        int j = 0, i = 0;
-        int min = Integer.MAX_VALUE;
-        List<Integer> visitedRouteList
-                = new ArrayList<>();
+        // Print the solution
+        hamiltonian.hamCycle(graph1);
+ 
+        /* Let us create the following graph
+           (0)--(1)--(2)
+            |   / \   |
+            |  /   \  |
+            | /     \ |
+           (3)       (4)    */
+        int graph2[][] = {
+                {0, 1, 0, 1, 0},
+                {1, 0, 1, 1, 1},
+                {0, 1, 0, 0, 1},
+                {1, 1, 0, 0, 0},
+                {0, 1, 1, 0, 0},
+        };
 
-        // Starting from the 0th indexed
-        // city i.e., the first city
-        visitedRouteList.add(0);
-        int[] route = new int[tsp.length];
-
-        // Traverse the adjacency
-        // matrix tsp[][]
-        while (i < tsp.length
-                && j < tsp[i].length) {
-
-            // Corner of the Matrix
-            if (counter >= tsp[i].length - 1) {
-                break;
-            }
-
-            // If this path is unvisited then
-            // and if the cost is less than
-            // update the cost
-            if (j != i
-                    && !(visitedRouteList.contains(j))) {
-                if (tsp[i][j] < min) {
-                    min = tsp[i][j];
-                    route[counter] = j + 1;
-                }
-            }
-            j++;
-
-            // Check all paths from the
-            // ith indexed city
-            if (j == tsp[i].length) {
-                sum += min;
-                min = Integer.MAX_VALUE;
-                visitedRouteList.add(route[counter] - 1);
-                j = 0;
-                i = route[counter] - 1;
-                counter++;
-            }
-        }
-
-        // Update the ending city in array
-        // from city which was last visited
-        i = route[counter - 1] - 1;
-
-        for (j = 0; j < tsp.length; j++) {
-
-            if ((i != j) && tsp[i][j] < min) {
-                min = tsp[i][j];
-                route[counter] = j + 1;
-            }
-        }
-        sum += min;
-
-        // Started from the node where
-        // we finished as well.
-        System.out.print("Minimum Cost is : ");
-        System.out.println(sum);
+        // Print the solution
+        hamiltonian.hamCycle(graph2);
     }
 }
