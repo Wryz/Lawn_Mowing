@@ -98,8 +98,7 @@ class Core {
 
     // driver program to test above function
     public static void main(String args[]) {
-        Core hamiltonian =
-                new Core();
+        Core hamiltonian = new Core();
         /* Let us create the following graph
            (0)--(1)--(2)
             |   / \   |
